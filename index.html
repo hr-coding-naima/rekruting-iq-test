@@ -1,0 +1,328 @@
+<!DOCTYPE html>
+<html lang="uz">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Professional IQ Test</title>
+    <style>
+        :root {
+            --primary-color: #2563eb;
+            --background-color: #f8fafc;
+            --card-color: #ffffff;
+            --text-color: #1e293b;
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+
+        body {
+            background-color: var(--background-color);
+            color: var(--text-color);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            padding: 20px;
+        }
+
+        .quiz-container {
+            background-color: var(--card-color);
+            border-radius: 16px;
+            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.05);
+            width: 100%;
+            max-width: 600px;
+            padding: 30px;
+            transition: all 0.3s ease;
+        }
+
+        .header {
+            margin-bottom: 25px;
+            text-align: center;
+        }
+
+        .progress-bar {
+            height: 6px;
+            background-color: #e2e8f0;
+            border-radius: 3px;
+            margin-bottom: 20px;
+            overflow: hidden;
+        }
+
+        .progress {
+            height: 100%;
+            background-color: var(--primary-color);
+            width: 0%;
+            transition: width 0.3s ease;
+        }
+
+        .question-number {
+            font-size: 14px;
+            color: #64748b;
+            font-weight: 600;
+            margin-bottom: 10px;
+        }
+
+        .question-text {
+            font-size: 18px;
+            font-weight: 600;
+            margin-bottom: 20px;
+        }
+
+        /* Vizual Savollar uchun Shakllar Ustasi */
+        .visual-box {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            background-color: #f1f5f9;
+            border-radius: 12px;
+            padding: 20px;
+            margin-bottom: 25px;
+            min-height: 150px;
+        }
+
+        .matrix-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 10px;
+            width: 180px;
+        }
+
+        .matrix-cell {
+            width: 50px;
+            height: 50px;
+            border: 2px solid #334155;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            font-weight: bold;
+        }
+
+        .fill-circle { width: 30px; height: 30px; background: #334155; border-radius: 50%; }
+        .empty-circle { width: 30px; height: 30px; border: 3px solid #334155; border-radius: 50%; }
+        .fill-square { width: 30px; height: 30px; background: #2563eb; }
+
+        .options-container {
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+        }
+
+        .option-btn {
+            background-color: #f8fafc;
+            border: 2px solid #e2e8f0;
+            border-radius: 10px;
+            padding: 14px 20px;
+            text-align: left;
+            font-size: 16px;
+            cursor: pointer;
+            transition: all 0.2s ease;
+        }
+
+        .option-btn:hover {
+            border-color: var(--primary-color);
+            background-color: #eff6ff;
+        }
+
+        .option-btn.selected {
+            border-color: var(--primary-color);
+            background-color: #3b82f6;
+            color: white;
+        }
+
+        .footer {
+            margin-top: 25px;
+            display: flex;
+            justify-content: flex-end;
+        }
+
+        .next-btn {
+            background-color: var(--primary-color);
+            color: white;
+            border: none;
+            padding: 12px 28px;
+            font-size: 16px;
+            font-weight: 600;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: background-color 0.2s;
+        }
+
+        .next-btn:hover { background-color: #1d4ed8; }
+        .next-btn:disabled { background-color: #cbd5e1; cursor: not-allowed; }
+
+        /* Natija oynasi */
+        .result-view {
+            text-align: center;
+        }
+
+        .iq-score {
+            font-size: 64px;
+            font-weight: 800;
+            color: var(--primary-color);
+            margin: 20px 0;
+        }
+
+        .status-badge {
+            display: inline-block;
+            padding: 6px 16px;
+            border-radius: 20px;
+            font-weight: 600;
+            background-color: #dcfce7;
+            color: #15803d;
+            margin-bottom: 20px;
+        }
+    </style>
+</head>
+<body>
+
+<div class="quiz-container" id="quiz-box">
+    <!-- Test kontenti JavaScript orqali yuklanadi -->
+</div>
+
+<script>
+    // IQ Test Savollari Bazasi
+    const questions = [
+        {
+            id: 1,
+            type: "text",
+            question: "Qaysi son qonuniyatni davom ettiradi? 2, 4, 8, 16, 32, ?",
+            options: ["48", "64", "54", "72"],
+            correct: 1
+        },
+        {
+            id: 2,
+            type: "visual-matrix1",
+            question: "Matritsadagi so'roq belgi (?) o'rniga mos keladigan shaklni toping.",
+            options: ["To'liq bo'yalgan doira", "Kvadrat", "Bo'sh doira", "Uchburchak"],
+            correct: 2
+        },
+        {
+            id: 3,
+            type: "text",
+            question: "Mantiqiy bog'liqlikni toping: 'Kitob' uchun 'Varoq' bo'lsa, 'Avtomobil' uchun nima?",
+            options: ["Haydovchi", "G'ildirak", "Yo'l", "Tezlik"],
+            correct: 1
+        },
+        {
+            id: 4,
+            type: "visual-matrix2",
+            question: "Ushbu ketma-ketlikda qaysi shakl mantiqan mos keladi: [◼ ◼ ◻] -> [◼ ◻ ◻] -> [◻ ◻ ?]",
+            options: ["◼ (Bo'yalgan kvadrat)", "◻ (Bo'sh kvadrat)", "▲ (Uchburchak)", "◯ (Doira)"],
+            correct: 1
+        },
+        {
+            id: 5,
+            type: "text",
+            question: "Agar bugun payshanba bo'lsa, 63 kundan keyin haftaning qaysi kuni bo'ladi?",
+            options: ["Juma", "Chorshanba", "Payshanba", "Shanba"],
+            correct: 2
+        }
+    ];
+
+    let currentQuestionIndex = 0;
+    let score = 0;
+    let selectedOption = null;
+
+    const quizBox = document.getElementById('quiz-box');
+
+    function loadQuestion() {
+        selectedOption = null;
+        const q = questions[currentQuestionIndex];
+        const progressPercent = ((currentQuestionIndex) / questions.length) * 100;
+
+        let visualHtml = '';
+        // Maxsus vizual shakllarni render qilish
+        if(q.type === "visual-matrix1") {
+            visualHtml = `
+                <div class="visual-box">
+                    <div class="matrix-grid">
+                        <div class="matrix-cell"><div class="fill-circle"></div></div>
+                        <div class="matrix-cell"><div class="fill-circle"></div></div>
+                        <div class="matrix-cell"><div class="fill-circle"></div></div>
+                        <div class="matrix-cell"><div class="empty-circle"></div></div>
+                        <div class="matrix-cell"><div class="empty-circle"></div></div>
+                        <div class="matrix-cell"><div class="empty-circle"></div></div>
+                        <div class="matrix-cell"><div class="fill-square"></div></div>
+                        <div class="matrix-cell"><div class="fill-square"></div></div>
+                        <div class="matrix-cell" style="color:#ef4444; font-size:24px;">?</div>
+                    </div>
+                </div>`;
+        } else if(q.type === "visual-matrix2") {
+            visualHtml = `
+                <div class="visual-box">
+                    <div style="font-size: 24px; letter-spacing: 5px;">◼◼◻ ➔ ◼◻◻ ➔ ◻◻<span style="color:#ef4444; font-weight:bold;">?</span></div>
+                </div>`;
+        }
+
+        let optionsHtml = q.options.map((option, index) => `
+            <button class="option-btn" onclick="selectOption(${index})">${option}</button>
+        `).join('');
+
+        quizBox.innerHTML = `
+            <div class="progress-bar"><div class="progress" style="width: ${progressPercent}%"></div></div>
+            <div class="question-number">Savol: ${currentQuestionIndex + 1} / ${questions.length}</div>
+            <div class="question-text">${q.question}</div>
+            ${visualHtml}
+            <div class="options-container">${optionsHtml}</div>
+            <div class="footer">
+                <button class="next-btn" id="next-btn" disabled onclick="nextQuestion()">
+                    ${currentQuestionIndex === questions.length - 1 ? 'Natijani ko\'rish' : 'Keyingi'}
+                </button>
+            </div>
+        `;
+    }
+
+    window.selectOption = function(index) {
+        selectedOption = index;
+        const buttons = document.querySelectorAll('.option-btn');
+        buttons.forEach((btn, idx) => {
+            if(idx === index) btn.classList.add('selected');
+            else btn.classList.remove('selected');
+        });
+        document.getElementById('next-btn').disabled = false;
+    }
+
+    window.nextQuestion = function() {
+        if(selectedOption === questions[currentQuestionIndex].correct) {
+            score++;
+        }
+
+        currentQuestionIndex++;
+        if(currentQuestionIndex < questions.length) {
+            loadQuestion();
+        } else {
+            showResult();
+        }
+    }
+
+    function showResult() {
+        // IQ hisoblash formulasi (shartli ravishda har bir to'g'ri javob uchun ball)
+        let iqResult = 70 + (score * 16); 
+        let status = "O'rta hol";
+        let color = "#eab308";
+
+        if(iqResult >= 130) { status = "Daho (Oliy daraja)"; color = "#16a34a"; }
+        else if(iqResult >= 110) { status = "Yuqori intellekt"; color = "#2563eb"; }
+        else if(iqResult >= 90) { status = "O'rtacha ko'rsatkich"; color = "#0d9488"; }
+
+        quizBox.innerHTML = `
+            <div class="result-view">
+                <h2>Test Yakunlandi!</h2>
+                <p style="margin-top:10px; color:#64748b;">Sizning intellektual koeffitsiyentingiz:</p>
+                <div class="iq-score">${iqResult} IQ</div>
+                <div class="status-badge" style="background-color:${color}22; color:${color};">${status}</div>
+                <p style="font-size:15px; color:#475569;">To'g'ri javoblar: ${score} / ${questions.length}</p>
+                <button class="next-btn" style="margin-top: 25px; float:none; width:100%;" onclick="location.reload()">Qayta topshirish</button>
+            </div>
+        `;
+    }
+
+    // Ilk yuklanish
+    loadQuestion();
+</script>
+</body>
+</html>
