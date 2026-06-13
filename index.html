@@ -3,13 +3,14 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Professional IQ Test</title>
+    <title>Professional Rasmli IQ Test</title>
     <style>
         :root {
             --primary-color: #2563eb;
             --background-color: #f8fafc;
             --card-color: #ffffff;
             --text-color: #1e293b;
+            --border-color: #cbd5e1;
         }
 
         * {
@@ -34,14 +35,8 @@
             border-radius: 16px;
             box-shadow: 0 10px 25px rgba(0, 0, 0, 0.05);
             width: 100%;
-            max-width: 600px;
+            max-width: 650px;
             padding: 30px;
-            transition: all 0.3s ease;
-        }
-
-        .header {
-            margin-bottom: 25px;
-            text-align: center;
         }
 
         .progress-bar {
@@ -63,7 +58,7 @@
             font-size: 14px;
             color: #64748b;
             font-weight: 600;
-            margin-bottom: 10px;
+            margin-bottom: 8px;
         }
 
         .question-text {
@@ -72,65 +67,53 @@
             margin-bottom: 20px;
         }
 
-        /* Vizual Savollar uchun Shakllar Ustasi */
-        .visual-box {
+        /* Savol rasmi joylashadigan joy */
+        .question-visual-box {
             display: flex;
             justify-content: center;
             align-items: center;
             background-color: #f1f5f9;
+            border: 2px dashed var(--border-color);
             border-radius: 12px;
             padding: 20px;
             margin-bottom: 25px;
-            min-height: 150px;
         }
 
-        .matrix-grid {
+        /* Rasmli javoblar griddi */
+        .options-grid {
             display: grid;
-            grid-template-columns: repeat(3, 1fr);
-            gap: 10px;
-            width: 180px;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 15px;
         }
 
-        .matrix-cell {
-            width: 50px;
-            height: 50px;
-            border: 2px solid #334155;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            font-weight: bold;
-        }
-
-        .fill-circle { width: 30px; height: 30px; background: #334155; border-radius: 50%; }
-        .empty-circle { width: 30px; height: 30px; border: 3px solid #334155; border-radius: 50%; }
-        .fill-square { width: 30px; height: 30px; background: #2563eb; }
-
-        .options-container {
+        .option-card {
+            background-color: var(--card-color);
+            border: 2px solid #e2e8f0;
+            border-radius: 12px;
+            padding: 15px;
+            cursor: pointer;
             display: flex;
             flex-direction: column;
-            gap: 12px;
-        }
-
-        .option-btn {
-            background-color: #f8fafc;
-            border: 2px solid #e2e8f0;
-            border-radius: 10px;
-            padding: 14px 20px;
-            text-align: left;
-            font-size: 16px;
-            cursor: pointer;
+            align-items: center;
+            justify-content: center;
             transition: all 0.2s ease;
         }
 
-        .option-btn:hover {
+        .option-card:hover {
             border-color: var(--primary-color);
             background-color: #eff6ff;
         }
 
-        .option-btn.selected {
+        .option-card.selected {
             border-color: var(--primary-color);
-            background-color: #3b82f6;
-            color: white;
+            background-color: #eff6ff;
+            box-shadow: 0 0 0 3px rgba(37, 99, 213, 0.2);
+        }
+
+        .option-label {
+            margin-top: 8px;
+            font-weight: 600;
+            color: #475569;
         }
 
         .footer {
@@ -154,72 +137,92 @@
         .next-btn:hover { background-color: #1d4ed8; }
         .next-btn:disabled { background-color: #cbd5e1; cursor: not-allowed; }
 
-        /* Natija oynasi */
-        .result-view {
-            text-align: center;
-        }
-
-        .iq-score {
-            font-size: 64px;
-            font-weight: 800;
-            color: var(--primary-color);
-            margin: 20px 0;
-        }
-
-        .status-badge {
-            display: inline-block;
-            padding: 6px 16px;
-            border-radius: 20px;
-            font-weight: 600;
-            background-color: #dcfce7;
-            color: #15803d;
-            margin-bottom: 20px;
-        }
+        .result-view { text-align: center; }
+        .iq-score { font-size: 64px; font-weight: 800; color: var(--primary-color); margin: 20px 0; }
+        .status-badge { display: inline-block; padding: 6px 16px; border-radius: 20px; font-weight: 600; margin-bottom: 20px; }
     </style>
 </head>
 <body>
 
 <div class="quiz-container" id="quiz-box">
-    <!-- Test kontenti JavaScript orqali yuklanadi -->
+    <!-- Kontent JS orqali yuklanadi -->
 </div>
 
 <script>
-    // IQ Test Savollari Bazasi
+    // Haqiqiy vizual IQ savollar bazasi (SVG grafikalari bilan)
     const questions = [
         {
             id: 1,
-            type: "text",
-            question: "Qaysi son qonuniyatni davom ettiradi? 2, 4, 8, 16, 32, ?",
-            options: ["48", "64", "54", "72"],
-            correct: 1
+            question: "1-Savol: Qonuniyatni aniqlang va so'roq belgisi (?) o'rniga mos keluvchi shaklni toping.",
+            // Savol matrisi: 3 ta figura (Aylana ichida chiziqlar o'zgaryapti)
+            questionSvg: `
+                <svg width="280" height="90" viewBox="0 0 280 90">
+                    <!-- 1-shakl -->
+                    <circle cx="45" cy="45" r="35" fill="none" stroke="#334155" stroke-width="3"/>
+                    <line x1="45" y1="10" x2="45" y2="80" stroke="#334155" stroke-width="3"/>
+                    <!-- O'tish belgisi -->
+                    <text x="100" y="52" font-size="24" font-weight="bold" fill="#64748b">➔</text>
+                    <!-- 2-shakl -->
+                    <circle cx="155" cy="45" r="35" fill="none" stroke="#334155" stroke-width="3"/>
+                    <line x1="155" y1="10" x2="155" y2="80" stroke="#334155" stroke-width="3"/>
+                    <line x1="120" y1="45" x2="190" y2="45" stroke="#334155" stroke-width="3"/>
+                    <!-- O'tish belgisi -->
+                    <text x="210" y="52" font-size="24" font-weight="bold" fill="#64748b">➔</text>
+                    <!-- So'roq -->
+                    <text x="250" y="55" font-size="32" font-weight="bold" fill="#ef4444">?</text>
+                </svg>
+            `,
+            options: [
+                { label: "A variant", svg: `<svg width="60" height="60"><circle cx="30" cy="30" r="22" fill="none" stroke="#334155" stroke-width="3"/><line x1="12" y1="12" x2="48" y2="48" stroke="#334155" stroke-width="3"/></svg>` },
+                { label: "B variant", svg: `<svg width="60" height="60"><circle cx="30" cy="30" r="22" fill="none" stroke="#334155" stroke-width="3"/><line x1="30" y1="8" x2="30" y2="52" stroke="#334155" stroke-width="3"/><line x1="8" y1="30" x2="52" y2="30" stroke="#334155" stroke-width="3"/><line x1="15" y1="15" x2="45" y2="45" stroke="#334155" stroke-width="3"/></svg>` },
+                { label: "C variant", svg: `<svg width="60" height="60"><circle cx="30" cy="30" r="22" fill="none" stroke="#334155" stroke-width="3"/></svg>` },
+                { label: "D variant", svg: `<svg width="60" height="60"><rect x="10" y="10" width="40" height="40" fill="none" stroke="#334155" stroke-width="3"/></svg>` }
+            ],
+            correct: 1 // B variant (Chiziqlar simmetrik qo'shilib boryapti)
         },
         {
             id: 2,
-            type: "visual-matrix1",
-            question: "Matritsadagi so'roq belgi (?) o'rniga mos keladigan shaklni toping.",
-            options: ["To'liq bo'yalgan doira", "Kvadrat", "Bo'sh doira", "Uchburchak"],
-            correct: 2
+            question: "2-Savol: To'g'ri to'ldiruvchi dominant kvadrat shaklini toping (Logika: Qora nuqtalar ko'payishi).",
+            questionSvg: `
+                <svg width="240" height="80" viewBox="0 0 240 80">
+                    <!-- 1-kvadrat -->
+                    <rect x="10" y="10" width="50" height="50" fill="none" stroke="#334155" stroke-width="2"/>
+                    <circle cx="35" cy="35" r="6" fill="#334155"/>
+                    <!-- Arrow -->
+                    <text x="75" y="42" font-size="20" fill="#64748b">➔</text>
+                    <!-- 2-kvadrat -->
+                    <rect x="110" y="10" width="50" height="50" fill="none" stroke="#334155" stroke-width="2"/>
+                    <circle cx="125" cy="25" r="6" fill="#334155"/>
+                    <circle cx="145" cy="45" r="6" fill="#334155"/>
+                    <!-- Arrow -->
+                    <text x="175" y="42" font-size="20" fill="#64748b">➔</text>
+                    <!-- ? -->
+                    <text x="210" y="45" font-size="28" font-weight="bold" fill="#ef4444">?</text>
+                </svg>
+            `,
+            options: [
+                { label: "A variant", svg: `<svg width="60" height="60"><rect x="10" y="10" width="40" height="40" fill="none" stroke="#334155" stroke-width="2"/><circle cx="20" cy="20" r="5" fill="#334155"/><circle cx="40" cy="20" r="5" fill="#334155"/><circle cx="30" cy="40" r="5" fill="#334155"/></svg>` },
+                { label: "B variant", svg: `<svg width="60" height="60"><rect x="10" y="10" width="40" height="40" fill="none" stroke="#334155" stroke-width="2"/><circle cx="30" cy="30" r="8" fill="none" stroke="#334155" stroke-width="2"/></svg>` },
+                { label: "C variant", svg: `<svg width="60" height="60"><rect x="10" y="10" width="40" height="40" fill="none" stroke="#334155" stroke-width="2"/></svg>` },
+                { label: "D variant", svg: `<svg width="60" height="60"><circle cx="30" cy="30" r="18" fill="#334155"/></svg>` }
+            ],
+            correct: 0 // A variant (3 ta nuqta bo'lishi kerak)
         },
         {
             id: 3,
-            type: "text",
-            question: "Mantiqiy bog'liqlikni toping: 'Kitob' uchun 'Varoq' bo'lsa, 'Avtomobil' uchun nima?",
-            options: ["Haydovchi", "G'ildirak", "Yo'l", "Tezlik"],
-            correct: 1
-        },
-        {
-            id: 4,
-            type: "visual-matrix2",
-            question: "Ushbu ketma-ketlikda qaysi shakl mantiqan mos keladi: [◼ ◼ ◻] -> [◼ ◻ ◻] -> [◻ ◻ ?]",
-            options: ["◼ (Bo'yalgan kvadrat)", "◻ (Bo'sh kvadrat)", "▲ (Uchburchak)", "◯ (Doira)"],
-            correct: 1
-        },
-        {
-            id: 5,
-            type: "text",
-            question: "Agar bugun payshanba bo'lsa, 63 kundan keyin haftaning qaysi kuni bo'ladi?",
-            options: ["Juma", "Chorshanba", "Payshanba", "Shanba"],
-            correct: 2
+            question: "3-Savol: Qaysi rasm guruhga mantiqan mos kelmaydi (Ortiqchasini toping)?",
+            questionSvg: `
+                <svg width="200" height="60" viewBox="0 0 200 60">
+                    <text x="20" y="40" font-size="16" font-weight="600" fill="#475569">To'rtburchaklar ichidagi simmetriya:</text>
+                </svg>
+            `,
+            options: [
+                { label: "A variant", svg: `<svg width="60" height="60"><rect x="10" y="10" width="40" height="40" fill="none" stroke="#334155" stroke-width="2"/><line x1="10" y1="10" x2="50" y2="50" stroke="#334155" stroke-width="2"/></svg>` },
+                { label: "B variant", svg: `<svg width="60" height="60"><rect x="10" y="10" width="40" height="40" fill="none" stroke="#334155" stroke-width="2"/><line x1="30" y1="10" x2="30" y2="50" stroke="#334155" stroke-width="2"/></svg>` },
+                { label: "C variant", svg: `<svg width="60" height="60"><rect x="10" y="10" width="40" height="40" fill="none" stroke="#334155" stroke-width="2"/><line x1="10" y1="30" x2="50" y2="30" stroke="#334155" stroke-width="2"/></svg>` },
+                { label: "D variant", svg: `<svg width="60" height="60"><rect x="10" y="10" width="40" height="40" fill="none" stroke="#334155" stroke-width="2"/><line x1="10" y1="20" x2="45" y2="45" stroke="#334155" stroke-width="2"/></svg>` }
+            ],
+            correct: 3 // D variant (Chiziq qiyshiq va simmetrik emas, qolganlari shaklni teng ikkiga bo'ladi)
         }
     ];
 
@@ -232,42 +235,23 @@
     function loadQuestion() {
         selectedOption = null;
         const q = questions[currentQuestionIndex];
-        const progressPercent = ((currentQuestionIndex) / questions.length) * 100;
-
-        let visualHtml = '';
-        // Maxsus vizual shakllarni render qilish
-        if(q.type === "visual-matrix1") {
-            visualHtml = `
-                <div class="visual-box">
-                    <div class="matrix-grid">
-                        <div class="matrix-cell"><div class="fill-circle"></div></div>
-                        <div class="matrix-cell"><div class="fill-circle"></div></div>
-                        <div class="matrix-cell"><div class="fill-circle"></div></div>
-                        <div class="matrix-cell"><div class="empty-circle"></div></div>
-                        <div class="matrix-cell"><div class="empty-circle"></div></div>
-                        <div class="matrix-cell"><div class="empty-circle"></div></div>
-                        <div class="matrix-cell"><div class="fill-square"></div></div>
-                        <div class="matrix-cell"><div class="fill-square"></div></div>
-                        <div class="matrix-cell" style="color:#ef4444; font-size:24px;">?</div>
-                    </div>
-                </div>`;
-        } else if(q.type === "visual-matrix2") {
-            visualHtml = `
-                <div class="visual-box">
-                    <div style="font-size: 24px; letter-spacing: 5px;">◼◼◻ ➔ ◼◻◻ ➔ ◻◻<span style="color:#ef4444; font-weight:bold;">?</span></div>
-                </div>`;
-        }
+        const progressPercent = (currentQuestionIndex / questions.length) * 100;
 
         let optionsHtml = q.options.map((option, index) => `
-            <button class="option-btn" onclick="selectOption(${index})">${option}</button>
+            <div class="option-card" id="option-${index}" onclick="selectOption(${index})">
+                ${option.svg}
+                <div class="option-label">${option.label}</div>
+            </div>
         `).join('');
 
         quizBox.innerHTML = `
             <div class="progress-bar"><div class="progress" style="width: ${progressPercent}%"></div></div>
             <div class="question-number">Savol: ${currentQuestionIndex + 1} / ${questions.length}</div>
             <div class="question-text">${q.question}</div>
-            ${visualHtml}
-            <div class="options-container">${optionsHtml}</div>
+            <div class="question-visual-box">
+                ${q.questionSvg}
+            </div>
+            <div class="options-grid">${optionsHtml}</div>
             <div class="footer">
                 <button class="next-btn" id="next-btn" disabled onclick="nextQuestion()">
                     ${currentQuestionIndex === questions.length - 1 ? 'Natijani ko\'rish' : 'Keyingi'}
@@ -278,10 +262,10 @@
 
     window.selectOption = function(index) {
         selectedOption = index;
-        const buttons = document.querySelectorAll('.option-btn');
-        buttons.forEach((btn, idx) => {
-            if(idx === index) btn.classList.add('selected');
-            else btn.classList.remove('selected');
+        const cards = document.querySelectorAll('.option-card');
+        cards.forEach((card, idx) => {
+            if(idx === index) card.classList.add('selected');
+            else card.classList.remove('selected');
         });
         document.getElementById('next-btn').disabled = false;
     }
@@ -300,28 +284,27 @@
     }
 
     function showResult() {
-        // IQ hisoblash formulasi (shartli ravishda har bir to'g'ri javob uchun ball)
-        let iqResult = 70 + (score * 16); 
-        let status = "O'rta hol";
+        let iqResult = 70 + Math.round((score / questions.length) * 60); 
+        let status = "O'rtacha";
         let color = "#eab308";
 
-        if(iqResult >= 130) { status = "Daho (Oliy daraja)"; color = "#16a34a"; }
-        else if(iqResult >= 110) { status = "Yuqori intellekt"; color = "#2563eb"; }
-        else if(iqResult >= 90) { status = "O'rtacha ko'rsatkich"; color = "#0d9488"; }
+        if(iqResult >= 120) { status = "Yuqori Intellekt (Daho)"; color = "#16a34a"; }
+        else if(iqResult >= 95) { status = "Yaxshi / Standart"; color = "#2563eb"; }
+        else { status = "Rivojlanishi lozim"; color = "#ef4444"; }
 
         quizBox.innerHTML = `
             <div class="result-view">
                 <h2>Test Yakunlandi!</h2>
-                <p style="margin-top:10px; color:#64748b;">Sizning intellektual koeffitsiyentingiz:</p>
+                <p style="margin-top:12px; color:#64748b;">Foydalanuvchining umumiy intellektual koeffitsiyenti:</p>
                 <div class="iq-score">${iqResult} IQ</div>
                 <div class="status-badge" style="background-color:${color}22; color:${color};">${status}</div>
-                <p style="font-size:15px; color:#475569;">To'g'ri javoblar: ${score} / ${questions.length}</p>
-                <button class="next-btn" style="margin-top: 25px; float:none; width:100%;" onclick="location.reload()">Qayta topshirish</button>
+                <p style="font-size:16px; color:#475569; margin-bottom: 20px;">To'g'ri javoblar soni: <b>${score} ta</b> (Jami ${questions.length} tadan)</p>
+                <button class="next-btn" style="width:100%;" onclick="location.reload()">Testni qayta boshlash</button>
             </div>
         `;
     }
 
-    // Ilk yuklanish
+    // Ilk yuklash
     loadQuestion();
 </script>
 </body>
